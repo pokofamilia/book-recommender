@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>本のおすすめアプリ</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+
+</head>
+<body>
+    <h1>本のおすすめ診断</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">診断する</button>
+    </form>
+
+    {% if recommendation %}
+        <h2>あなたへのおすすめ本</h2>
+        <p><strong>{{ recommendation.title }}</strong> - {{ recommendation.author }}</p>
+        <p>{{ recommendation.description }}</p>
+    {% endif %}
+</body>
+</html>
