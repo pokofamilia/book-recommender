@@ -1,27 +1,33 @@
+# main/views.py
 from django.shortcuts import render
 from .forms import QuestionForm
-from .models import Book
+from .utils import search_books
 
 def recommend_view(request):
-    recommendation = None
+    recommendations = []
 
     if request.method == "POST":
         form = QuestionForm(request.POST)
         if form.is_valid():
             mood = form.cleaned_data["mood"]
-            length = form.cleaned_data["length"]
 
-            # 簡単なロジック例
+            # mood に応じて日本語キーワードで検索
             if mood == "fun":
-                recommendation = Book.objects.filter(genre="小説").first()
+                query = "小説"
             elif mood == "learn":
-                recommendation = Book.objects.filter(genre="ビジネス").first()
+                query = "ビジネス書"
             elif mood == "relax":
-                recommendation = Book.objects.filter(genre="エッセイ").first()
+                query = "エッセイ"
+            else:
+                query = "本"
+
+            recommendations = search_books(query)
+            print(recommendations)  # デバッグ用
+
     else:
         form = QuestionForm()
 
     return render(request, "main/recommend.html", {
         "form": form,
-        "recommendation": recommendation
+        "recommendations": recommendations
     })
