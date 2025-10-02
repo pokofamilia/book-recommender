@@ -1,45 +1,35 @@
-{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <title>本のおすすめアプリ</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>本のおすすめ診断</title>
 </head>
-<body class="bg-light">
-<div class="container py-5">
+<body>
+    <h1>📚 本のおすすめ診断</h1>
 
-    <h1 class="text-center mb-4">📚 本のおすすめ診断</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">診断する</button>
+    </form>
 
-    <div class="card mx-auto mb-4" style="max-width: 500px;">
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary w-100">診断する</button>
-            </form>
-        </div>
-    </div>
+    <hr>
 
+    <h2>おすすめの本</h2>
     {% if recommendations %}
-        <h2 class="mb-3">おすすめの本</h2>
-        <div class="row">
+        <ul>
             {% for book in recommendations %}
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100">
-                        {% if book.thumbnail %}
-                            <img src="{{ book.thumbnail }}" class="card-img-top">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ book.title }}</h5>
-                            <p class="card-text">{{ book.authors }}</p>
-                            <p class="card-text">{{ book.description|truncatechars:100 }}</p>
-                        </div>
-                    </div>
-                </div>
+                <li>
+                    <strong>{{ book.title }}</strong><br>
+                    著者: {{ book.authors }}<br>
+                    {% if book.thumbnail %}
+                        <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+                    {% endif %}
+                </li>
             {% endfor %}
-        </div>
+        </ul>
+    {% else %}
+        <p>まだ本が表示されていません。</p>
     {% endif %}
-
-</div>
 </body>
 </html>

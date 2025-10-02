@@ -1,18 +1,31 @@
 from django import forms
 
-class QuestionForm(forms.Form):
+class RecommendForm(forms.Form):
     mood = forms.ChoiceField(
         choices=[
-            ("fun", "楽しい気分になりたい"),
-            ("learn", "学びたい"),
+            ("fun", "楽しい気分"),
+            ("learn", "勉強したい"),
             ("relax", "リラックスしたい"),
         ],
         label="今の気分は？"
     )
+
+    genre = forms.ChoiceField(
+        choices=[
+            ("novel", "小説"),
+            ("business", "ビジネス"),
+            ("science", "科学"),
+            ("history", "歴史"),
+            ("fantasy", "ファンタジー"),
+        ],
+        label="ジャンルを選んでください"
+    )
+
     length = forms.ChoiceField(
         choices=[
-            ("short", "短くサクッと読める本"),
-            ("long", "じっくり読める長編"),
+            ("short", "短い本（200ページ以下）"),
+            ("medium", "中くらい（200〜400ページ）"),
+            ("long", "長編（400ページ以上）")
         ],
-        label="どんな長さの本を読みたい？"
+        label="読みたい本の長さ"
     )

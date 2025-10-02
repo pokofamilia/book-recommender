@@ -1,26 +1,27 @@
-# main/utils.py
 import requests
 
-def search_books(query, max_results=5):
+GENRE_MAP = {
+    "novel": "小説",
+    "business": "ビジネス",
+    "science": "科学",
+    "history": "歴史",
+    "fantasy": "ファンタジー",
+}
+
+def search_books(query, max_results=10):
     url = "https://www.googleapis.com/books/v1/volumes"
-    params = {
-        "q": query,
-        "maxResults": max_results,
-        # "key": "YOUR_API_KEY"  # 必要ならここに APIキー
-    }
+    params = {"q": query, "maxResults": max_results}
     response = requests.get(url, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        books = []
-        for item in data.get("items", []):
-            info = item.get("volumeInfo", {})
-            books.append({
-                "title": info.get("title", "タイトルなし"),
-                "authors": ", ".join(info.get("authors", ["不明"])),
-                "description": info.get("description", "説明なし"),
-                "thumbnail": info.get("imageLinks", {}).get("thumbnail", "")
-            })
-        return books
-    else:
-        print("Error:", response.status_code)
-        return []
+
+    data = response.json()
+    print("APIレスポンス:", data)  # ←ここで中身を確認
+
+    items = data.get("items", [])
+    return [
+        {
+            "title": item["volumeInfo"].get("title", "タイトル不明"),
+            "authors": ", ".join(item["volumeInfo"].get("authors", ["著者不明"])),
+            "thumbnail": item["volumeInfo"].get("imageLinks", {}).get("thumbnail", ""),
+        }
+        for item in items
+    ]
