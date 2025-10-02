@@ -1,35 +1,32 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>本のおすすめ診断</title>
-</head>
-<body>
-    <h1>📚 本のおすすめ診断</h1>
+{% extends "main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
 
-    <form method="post">
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4 text-center" style="color:#2c3e50;">本のおすすめ</h1>
+
+    <form method="post" class="mb-5">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">診断する</button>
+        {{ form|crispy }}
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary px-4 py-2" style="background-color:#34495e; border:none;">検索</button>
+        </div>
     </form>
 
-    <hr>
-
-    <h2>おすすめの本</h2>
     {% if recommendations %}
-        <ul>
-            {% for book in recommendations %}
-                <li>
-                    <strong>{{ book.title }}</strong><br>
-                    著者: {{ book.authors }}<br>
-                    {% if book.thumbnail %}
-                        <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>まだ本が表示されていません。</p>
+    <div class="row">
+        {% for book in recommendations %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm" style="border-radius:12px; background-color:#f8f9fa;">
+                <img src="{{ book.cover_url }}" class="card-img-top" alt="{{ book.title }}" style="border-top-left-radius:12px; border-top-right-radius:12px; height:300px; object-fit:cover;">
+                <div class="card-body">
+                    <h5 class="card-title text-center" style="color:#2c3e50; font-weight:500;">{{ book.title }}</h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     {% endif %}
-</body>
-</html>
+</div>
+{% endblock %}
